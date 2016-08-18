@@ -450,10 +450,11 @@ public class GameServiceImpl implements GameService {
     CompletableFuture.runAsync(() -> {
       try {
         int exitCode = process.waitFor();
+        logger.info("Forged Alliance terminated with exit code {}", exitCode);
         setGameRunning(false);
         localRelayServer.close();
         fafService.notifyGameEnded();
-        logger.info("Forged Alliance terminated with exit code {}", exitCode);
+        replayService.stopReplayServer();
       } catch (InterruptedException e) {
         logger.warn("Error during post-game processing", e);
       }

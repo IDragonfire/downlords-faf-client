@@ -82,10 +82,11 @@ public class ReplayServerImpl implements ReplayServer {
 
       logger.debug("Opening local replay server on port {}", localReplayServerPort);
 
-      try (ServerSocket serverSocket1 = new ServerSocket(localReplayServerPort);
+      try (ServerSocket serverSocket = new ServerSocket(localReplayServerPort);
            Socket fafReplayServerSocket = new Socket(fafReplayServerHost, fafReplayServerPort)) {
-        this.serverSocket = serverSocket1;
-        recordAndRelay(uid, serverSocket1, new BufferedOutputStream(fafReplayServerSocket.getOutputStream()));
+        this.serverSocket = serverSocket;
+        recordAndRelay(uid, serverSocket, new BufferedOutputStream(fafReplayServerSocket.getOutputStream()));
+        logger.debug("Replay server closed gracefully");
       } catch (IOException e) {
         logger.warn("Error in replay server", e);
         notificationService.addNotification(new PersistentNotification(
@@ -93,6 +94,8 @@ public class ReplayServerImpl implements ReplayServer {
             Severity.WARN, Collections.singletonList(new Action(i18n.get("replayServer.retry"), event -> start(uid)))
             )
         );
+      } finally {
+        serverSocket = null;
       }
     }).start();
   }
