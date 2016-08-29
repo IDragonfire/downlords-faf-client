@@ -14,6 +14,8 @@ import com.faforever.client.connectivity.ConnectivityService;
 import com.faforever.client.connectivity.ConnectivityServiceImpl;
 import com.faforever.client.connectivity.TurnServerAccessor;
 import com.faforever.client.connectivity.TurnServerAccessorImpl;
+import com.faforever.client.coop.CoopService;
+import com.faforever.client.coop.CoopServiceImpl;
 import com.faforever.client.events.EventService;
 import com.faforever.client.events.EventServiceImpl;
 import com.faforever.client.fa.ForgedAllianceService;
@@ -325,5 +327,10 @@ public class ServiceConfig {
   @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
   StunStack stunStack() {
     return new StunStack();
+  }
+
+  @Bean
+  CoopService coopService() {
+    return new CoopServiceImpl();
   }
 }

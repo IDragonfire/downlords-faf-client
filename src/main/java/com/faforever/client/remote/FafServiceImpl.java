@@ -9,6 +9,7 @@ import com.faforever.client.chat.avatar.event.AvatarChangedEvent;
 import com.faforever.client.config.CacheNames;
 import com.faforever.client.connectivity.ConnectivityService;
 import com.faforever.client.domain.RatingHistoryDataPoint;
+import com.faforever.client.coop.CoopMissionBean;
 import com.faforever.client.game.Faction;
 import com.faforever.client.game.NewGameInfo;
 import com.faforever.client.leaderboard.Ranked1v1EntryBean;
@@ -196,6 +197,11 @@ public class FafServiceImpl implements FafService {
   @Override
   public CompletionStage<List<MapBean>> getNewestMaps(int count) {
     return CompletableFuture.supplyAsync(() -> fafApiAccessor.getNewestMaps(count), threadPoolExecutor);
+  }
+
+  @Override
+  public CompletableFuture<List<CoopMissionBean>> getCoopMaps() {
+    return CompletableFuture.supplyAsync(() -> fafApiAccessor.getCoopMissions());
   }
 
   @Override

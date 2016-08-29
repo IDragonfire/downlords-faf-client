@@ -1,6 +1,7 @@
 package com.faforever.client.api;
 
 import com.faforever.client.config.CacheNames;
+import com.faforever.client.coop.CoopMissionBean;
 import com.faforever.client.io.ByteCountListener;
 import com.faforever.client.io.CountingFileContent;
 import com.faforever.client.leaderboard.Ranked1v1EntryBean;
@@ -64,7 +65,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class FafApiAccessorImpl implements FafApiAccessor {
 
@@ -168,7 +170,7 @@ public class FafApiAccessorImpl implements FafApiAccessor {
     logger.debug("Loading available mods");
     return getMany("/mods", Mod.class).stream()
         .map(ModInfoBean::fromModInfo)
-        .collect(Collectors.toList());
+        .collect(toList());
   }
 
   private <T> List<T> getMany(String endpointPath, Class<T> type) {
@@ -193,7 +195,7 @@ public class FafApiAccessorImpl implements FafApiAccessor {
   public List<Ranked1v1EntryBean> getRanked1v1Entries() {
     return getMany("/leaderboards/1v1", LeaderboardEntry.class).stream()
         .map(Ranked1v1EntryBean::fromLeaderboardEntry)
-        .collect(Collectors.toList());
+        .collect(toList());
   }
 
   @Override
@@ -266,6 +268,13 @@ public class FafApiAccessorImpl implements FafApiAccessor {
     postMultipart("/maps/upload", multipartContent);
   }
 
+  @Override
+  @Cacheable(CacheNames.COOP_MAPS)
+  public List<CoopMissionBean> getCoopMissions() {
+    logger.debug("Loading available coop missions");
+    return getMany("/coop/missions", CoopMission.class).stream().map(CoopMissionBean::fromCoopInfo).collect(toList());
+  }
+
   @NotNull
   private MultipartContent createFileMultipart(Path file, ByteCountListener listener) {
     HttpMediaType mediaType = new HttpMediaType("multipart/form-data").setParameter("boundary", "__END_OF_PART__");
@@ -312,7 +321,7 @@ public class FafApiAccessorImpl implements FafApiAccessor {
     return getMany(query, Map.class, page)
         .stream()
         .map(MapBean::fromMap)
-        .collect(Collectors.toList());
+        .collect(toList());
   }
 
   private Credential authorize(AuthorizationCodeFlow flow, String userId) throws IOException {

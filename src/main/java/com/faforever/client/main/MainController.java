@@ -5,6 +5,7 @@ import com.faforever.client.chat.ChatController;
 import com.faforever.client.chat.ChatService;
 import com.faforever.client.chat.PlayerInfoBean;
 import com.faforever.client.connectivity.ConnectivityService;
+import com.faforever.client.coop.CoopController;
 import com.faforever.client.fx.JavaFxUtil;
 import com.faforever.client.fx.WindowController;
 import com.faforever.client.game.Faction;
@@ -237,6 +238,8 @@ public class MainController implements OnChooseGameDirectoryListener {
   WindowController windowController;
   @Resource
   ThemeService themeService;
+  @Resource
+  CoopController coopController;
   @Resource
   EventBus eventBus;
 
@@ -889,6 +892,12 @@ public class MainController implements OnChooseGameDirectoryListener {
   void onChatSelected(ActionEvent event) {
     setActiveNavigationButton((ButtonBase) event.getSource());
     setContent(chatController.getRoot());
+  }
+
+  @FXML
+  void onPlayCoopSelected(ActionEvent event) {
+    setContent(coopController.getRoot());
+    setActiveNavigationButtonFromChild((MenuItem) event.getTarget());
   }
 
   @FXML

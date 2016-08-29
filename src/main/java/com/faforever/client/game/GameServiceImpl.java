@@ -150,6 +150,7 @@ public class GameServiceImpl implements GameService {
     stopSearchRanked1v1();
 
     return updateGameIfNecessary(newGameInfo.getGameType(), null, emptyMap(), newGameInfo.getSimMods())
+        .thenCompose(aVoid -> downloadMapIfNecessary(newGameInfo.getMap()))
         .thenRun(() -> connectivityService.connect())
         .thenRun(() -> localRelayServer.start(connectivityService))
         .thenCompose(aVoid -> fafService.requestHostGame(newGameInfo))

@@ -1,5 +1,6 @@
 package com.faforever.client.api;
 
+import com.faforever.client.coop.CoopMissionBean;
 import com.faforever.client.io.ByteCountListener;
 import com.faforever.client.leaderboard.Ranked1v1EntryBean;
 import com.faforever.client.map.MapBean;
@@ -115,6 +116,11 @@ public class MockFafApiAccessor implements FafApiAccessor {
   @Override
   public void uploadMap(Path file, boolean isRanked, ByteCountListener listener) {
 
+  }
+
+  @Override
+  public List<CoopMissionBean> getCoopMissions() {
+    return Collections.emptyList();
   }
 
 }

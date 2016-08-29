@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox xmlns:fx="http://javafx.com/fxml/1" fx:id="coopRoot" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.60"
+      fx:controller="com.faforever.client.coop.CoopController">
+    <children>
+        <VBox alignment="TOP_CENTER" prefWidth="300.0" spacing="10.0" styleClass="coop-detail-pane">
+            <children>
+                <ComboBox fx:id="missionComboBox" prefWidth="150.0"/>
+                <ImageView fx:id="mapImageView" fitHeight="128.0" fitWidth="128.0" pickOnBounds="true"
+                           preserveRatio="true"/>
+                <Label fx:id="titleLabel" maxWidth="1.7976931348623157E308" styleClass="h2" text="&lt;Title&gt;"
+                       wrapText="true"/>
+                <ScrollPane fitToWidth="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
+                            VBox.vgrow="ALWAYS">
+                    <content>
+                        <Label fx:id="descriptionLabel" maxWidth="1.7976931348623157E308" text="&lt;Description&gt;"
+                               wrapText="true"/>
+                    </content>
+                </ScrollPane>
+                <TextField fx:id="titleTextField" promptText="%game.create.title" styleClass="game-title-input"/>
+                <Button defaultButton="true" mnemonicParsing="false" onAction="#onPlayButtonClicked" text="%coop.play"/>
+                <Label styleClass="h2" text="Leaderboard"/>
+                <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Not yet implemented"
+                       VBox.vgrow="ALWAYS"/>
+            </children>
+        </VBox>
+        <AnchorPane fx:id="gamesContainer" prefHeight="200.0" prefWidth="200.0"/>
+    </children>
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    </padding>
+</HBox>

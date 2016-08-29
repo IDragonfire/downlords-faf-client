@@ -13,10 +13,10 @@ public class NewGameInfo {
   public NewGameInfo() {
   }
 
-  public NewGameInfo(String title, String password, String mod, String map, Set<String> simMods) {
+  public NewGameInfo(String title, String password, String gameType, String map, Set<String> simMods) {
     this.title = title;
     this.password = password;
-    this.gameType = mod;
+    this.gameType = gameType;
     this.map = map;
     this.simMods = simMods;
   }
@@ -37,20 +37,20 @@ public class NewGameInfo {
     this.password = password;
   }
 
+  public String getGameType() {
+    return gameType;
+  }
+
+  public void setGameType(String mod) {
+    this.gameType = mod;
+  }
+
   public String getMap() {
     return map;
   }
 
   public void setMap(String map) {
     this.map = map;
-  }
-
-  public String getGameType() {
-    return gameType;
-  }
-
-  public void setGameType(String gameType) {
-    this.gameType = gameType;
   }
 
   public Set<String> getSimMods() {
