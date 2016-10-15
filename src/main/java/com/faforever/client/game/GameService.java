@@ -24,11 +24,11 @@ public interface GameService {
 
   ReadOnlyBooleanProperty gameRunningProperty();
 
-  void addOnGameInfoBeansChangeListener(ListChangeListener<GameInfoBean> listener);
+  void addOnGameInfoBeansChangeListener(ListChangeListener<Game> listener);
 
   CompletionStage<Void> hostGame(NewGameInfo name);
 
-  CompletionStage<Void> joinGame(GameInfoBean gameInfoBean, String password);
+  CompletionStage<Void> joinGame(Game game, String password);
 
   List<GameTypeBean> getGameTypes();
 
@@ -42,12 +42,12 @@ public interface GameService {
 
   CompletionStage<Void> runWithLiveReplay(URI replayUri, Integer gameId, String gameType, String mapName) throws IOException;
 
-  ObservableList<GameInfoBean> getGameInfoBeans();
+  ObservableList<Game> getGames();
 
   @Nullable
   GameTypeBean getGameTypeByString(String gameTypeBeanName);
 
-  GameInfoBean getByUid(int uid);
+  Game getByUid(int uid);
 
   void addOnRankedMatchNotificationListener(Consumer<MatchmakerMessage> listener);
 
@@ -61,7 +61,7 @@ public interface GameService {
    * Returns the game the player is currently in. Returns {@code null} if not in a game.
    */
   @Nullable
-  GameInfoBean getCurrentGame();
+  Game getCurrentGame();
 
   boolean isGameRunning();
 }

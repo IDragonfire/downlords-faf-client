@@ -2,8 +2,8 @@ package com.faforever.client.remote;
 
 import com.faforever.client.api.FafApiAccessor;
 import com.faforever.client.api.Ranked1v1Stats;
+import com.faforever.client.player.Player;
 import com.faforever.client.api.RatingType;
-import com.faforever.client.chat.PlayerInfoBean;
 import com.faforever.client.chat.avatar.AvatarBean;
 import com.faforever.client.chat.avatar.event.AvatarChangedEvent;
 import com.faforever.client.config.CacheNames;
@@ -113,22 +113,22 @@ public class FafServiceImpl implements FafService {
   }
 
   @Override
-  public void addFriend(PlayerInfoBean player) {
+  public void addFriend(Player player) {
     fafServerAccessor.addFriend(player.getId());
   }
 
   @Override
-  public void addFoe(PlayerInfoBean player) {
+  public void addFoe(Player player) {
     fafServerAccessor.addFoe(player.getId());
   }
 
   @Override
-  public void removeFriend(PlayerInfoBean player) {
+  public void removeFriend(Player player) {
     fafServerAccessor.removeFriend(player.getId());
   }
 
   @Override
-  public void removeFoe(PlayerInfoBean player) {
+  public void removeFoe(Player player) {
     fafServerAccessor.removeFoe(player.getId());
   }
 

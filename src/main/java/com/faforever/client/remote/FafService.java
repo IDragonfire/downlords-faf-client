@@ -2,9 +2,8 @@ package com.faforever.client.remote;
 
 import com.faforever.client.api.Ranked1v1Stats;
 import com.faforever.client.api.RatingType;
-import com.faforever.client.chat.PlayerInfoBean;
+import com.faforever.client.player.Player;
 import com.faforever.client.chat.avatar.AvatarBean;
-import com.faforever.client.config.CacheNames;
 import com.faforever.client.coop.CoopMissionBean;
 import com.faforever.client.domain.RatingHistoryDataPoint;
 import com.faforever.client.game.Faction;
@@ -51,13 +50,13 @@ public interface FafService {
 
   void disconnect();
 
-  void addFriend(PlayerInfoBean friendId);
+  void addFriend(Player friendId);
 
-  void addFoe(PlayerInfoBean foeId);
+  void addFoe(Player foeId);
 
-  void removeFriend(PlayerInfoBean friendId);
+  void removeFriend(Player friendId);
 
-  void removeFoe(PlayerInfoBean foeId);
+  void removeFoe(Player foeId);
 
   Long getSessionId();
 

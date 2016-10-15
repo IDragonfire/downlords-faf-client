@@ -1,15 +1,15 @@
 package com.faforever.client.relay.event;
 
-import com.faforever.client.game.GameInfoBean;
+import com.faforever.client.game.Game;
 
 public class GameFullEvent {
-  private final GameInfoBean gameInfoBean;
+  private final Game game;
 
-  public GameFullEvent(GameInfoBean gameInfoBean) {
-    this.gameInfoBean = gameInfoBean;
+  public GameFullEvent(Game game) {
+    this.game = game;
   }
 
-  public GameInfoBean getGameInfoBean() {
-    return gameInfoBean;
+  public Game getGame() {
+    return game;
   }
 }

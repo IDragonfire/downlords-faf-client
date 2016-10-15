@@ -52,10 +52,10 @@ public class GameTileController {
   GameService gameService;
   @Resource
   JoinGameHelper joinGameHelper;
-  private Consumer<GameInfoBean> onSelectedListener;
-  private GameInfoBean gameInfoBean;
+  private Consumer<Game> onSelectedListener;
+  private Game game;
 
-  public void setOnSelectedListener(Consumer<GameInfoBean> onSelectedListener) {
+  public void setOnSelectedListener(Consumer<Game> onSelectedListener) {
     this.onSelectedListener = onSelectedListener;
   }
 
@@ -76,43 +76,43 @@ public class GameTileController {
     return gameTileRoot;
   }
 
-  public void setGameInfoBean(GameInfoBean gameInfoBean) {
-    this.gameInfoBean = gameInfoBean;
+  public void setGame(Game game) {
+    this.game = game;
 
-    GameTypeBean gameType = gameService.getGameTypeByString(gameInfoBean.getFeaturedMod());
+    GameTypeBean gameType = gameService.getGameTypeByString(game.getFeaturedMod());
     String fullName = gameType != null ? gameType.getFullName() : null;
     gameTypeLabel.setText(StringUtils.defaultString(fullName));
 
-    gameTitleLabel.setText(gameInfoBean.getTitle());
-    hostLabel.setText(gameInfoBean.getHost());
+    gameTitleLabel.setText(game.getTitle());
+    hostLabel.setText(game.getHost());
 
-    gameMapLabel.textProperty().bind(gameInfoBean.mapFolderNameProperty());
+    gameMapLabel.textProperty().bind(game.mapFolderNameProperty());
     numberOfPlayersLabel.textProperty().bind(createStringBinding(
-        () -> i18n.get("game.players.format", gameInfoBean.getNumPlayers(), gameInfoBean.getMaxPlayers()),
-        gameInfoBean.numPlayersProperty(),
-        gameInfoBean.maxPlayersProperty()
+        () -> i18n.get("game.players.format", game.getNumPlayers(), game.getMaxPlayers()),
+        game.numPlayersProperty(),
+        game.maxPlayersProperty()
     ));
-    mapImageView.imageProperty().bind(createObjectBinding(() -> mapService.loadSmallPreview(gameInfoBean.getMapFolderName()), gameInfoBean.mapFolderNameProperty()));
+    mapImageView.imageProperty().bind(createObjectBinding(() -> mapService.loadSmallPreview(game.getMapFolderName()), game.mapFolderNameProperty()));
 
     modsLabel.textProperty().bind(createStringBinding(
-        () -> Joiner.on(i18n.get("textSeparator")).join(gameInfoBean.getSimMods().values()),
-        gameInfoBean.getSimMods()
+        () -> Joiner.on(i18n.get("textSeparator")).join(game.getSimMods().values()),
+        game.getSimMods()
     ));
 
     // TODO display "unknown map" image first since loading may take a while
     mapImageView.imageProperty().bind(createObjectBinding(
-        () -> mapService.loadSmallPreview(gameInfoBean.getMapFolderName()),
-        gameInfoBean.mapFolderNameProperty()
+        () -> mapService.loadSmallPreview(game.getMapFolderName()),
+        game.mapFolderNameProperty()
     ));
 
-    lockIconLabel.visibleProperty().bind(gameInfoBean.passwordProtectedProperty());
+    lockIconLabel.visibleProperty().bind(game.passwordProtectedProperty());
 
     Tooltip tooltip = new Tooltip();
     Tooltip.install(gameTileRoot, tooltip);
     tooltip.activatedProperty().addListener((observable, oldValue, newValue) -> {
       if (newValue) {
         GameTooltipController gameTooltipController = applicationContext.getBean(GameTooltipController.class);
-        gameTooltipController.setGameInfoBean(gameInfoBean);
+        gameTooltipController.setGameInfoBean(game);
         tooltip.setGraphic(gameTooltipController.getRoot());
       }
     });
@@ -126,14 +126,14 @@ public class GameTileController {
   @FXML
   void onClick(MouseEvent mouseEvent) {
     Objects.requireNonNull(onSelectedListener, "onSelectedListener has not been set");
-    Objects.requireNonNull(gameInfoBean, "gameInfoBean has not been set");
+    Objects.requireNonNull(game, "gameInfoBean has not been set");
 
     gameTileRoot.requestFocus();
-    onSelectedListener.accept(gameInfoBean);
+    onSelectedListener.accept(game);
 
     if (mouseEvent.getButton() == MouseButton.PRIMARY && mouseEvent.getClickCount() == 2) {
       mouseEvent.consume();
-      joinGameHelper.join(gameInfoBean);
+      joinGameHelper.join(game);
     }
   }
 }

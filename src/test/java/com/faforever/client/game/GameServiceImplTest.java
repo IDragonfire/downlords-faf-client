@@ -113,7 +113,7 @@ public class GameServiceImplTest extends AbstractPlainJavaFxTest {
   @Captor
   private ArgumentCaptor<Consumer<Void>> gameLaunchedListenerCaptor;
   @Captor
-  private ArgumentCaptor<ListChangeListener.Change<? extends GameInfoBean>> gameInfoBeanChangeListenerCaptor;
+  private ArgumentCaptor<ListChangeListener.Change<? extends Game>> gameInfoBeanChangeListenerCaptor;
   @Captor
   private ArgumentCaptor<Consumer<GameTypeMessage>> gameTypeMessageListenerCaptor;
   @Captor
@@ -165,28 +165,28 @@ public class GameServiceImplTest extends AbstractPlainJavaFxTest {
   @Test
   @SuppressWarnings("unchecked")
   public void testJoinGameMapIsAvailable() throws Exception {
-    GameInfoBean gameInfoBean = GameInfoBeanBuilder.create().defaultValues().get();
+    Game game = GameInfoBeanBuilder.create().defaultValues().get();
 
     ObservableMap<String, String> simMods = FXCollections.observableHashMap();
     simMods.put("123-456-789", "Fake mod name");
 
-    gameInfoBean.setSimMods(simMods);
-    gameInfoBean.setMapFolderName("map");
+    game.setSimMods(simMods);
+    game.setMapFolderName("map");
 
     GameLaunchMessage gameLaunchMessage = GameLaunchMessageBuilder.create().defaultValues().get();
     InetSocketAddress externalSocketAddress = new InetSocketAddress(123);
 
     when(mapService.isInstalled("map")).thenReturn(true);
     when(connectivityService.getExternalSocketAddress()).thenReturn(externalSocketAddress);
-    when(fafService.requestJoinGame(gameInfoBean.getUid(), null)).thenReturn(completedFuture(gameLaunchMessage));
+    when(fafService.requestJoinGame(game.getId(), null)).thenReturn(completedFuture(gameLaunchMessage));
     when(localRelayServer.getPort()).thenReturn(111);
     when(gameUpdateService.updateInBackground(any(), any(), any(), any())).thenReturn(completedFuture(null));
 
-    CompletableFuture<Void> future = instance.joinGame(gameInfoBean, null).toCompletableFuture();
+    CompletableFuture<Void> future = instance.joinGame(game, null).toCompletableFuture();
 
     assertThat(future.get(TIMEOUT, TIME_UNIT), is(nullValue()));
     verify(mapService, never()).download(any());
-    verify(replayService).startReplayServer(gameInfoBean.getUid());
+    verify(replayService).startReplayServer(game.getId());
   }
 
   @Test
@@ -304,7 +304,7 @@ public class GameServiceImplTest extends AbstractPlainJavaFxTest {
 
   @Test
   public void testOnGames() throws Exception {
-    assertThat(instance.getGameInfoBeans(), empty());
+    assertThat(instance.getGames(), empty());
 
     GameInfoMessage multiGameInfoMessage = new GameInfoMessage();
     multiGameInfoMessage.setGames(asList(
@@ -314,12 +314,12 @@ public class GameServiceImplTest extends AbstractPlainJavaFxTest {
 
     gameInfoMessageListenerCaptor.getValue().accept(multiGameInfoMessage);
 
-    assertThat(instance.getGameInfoBeans(), hasSize(2));
+    assertThat(instance.getGames(), hasSize(2));
   }
 
   @Test
   public void testOnGameInfoAdd() {
-    assertThat(instance.getGameInfoBeans(), empty());
+    assertThat(instance.getGames(), empty());
 
     GameInfoMessage gameInfoMessage1 = GameInfoMessageBuilder.create(1).defaultValues().title("Game 1").get();
     gameInfoMessageListenerCaptor.getValue().accept(gameInfoMessage1);
@@ -327,10 +327,10 @@ public class GameServiceImplTest extends AbstractPlainJavaFxTest {
     GameInfoMessage gameInfoMessage2 = GameInfoMessageBuilder.create(2).defaultValues().title("Game 2").get();
     gameInfoMessageListenerCaptor.getValue().accept(gameInfoMessage2);
 
-    GameInfoBean gameInfoBean1 = new GameInfoBean(gameInfoMessage1);
-    GameInfoBean gameInfoBean2 = new GameInfoBean(gameInfoMessage2);
+    Game game1 = new Game(gameInfoMessage1);
+    Game game2 = new Game(gameInfoMessage2);
 
-    assertThat(instance.getGameInfoBeans(), containsInAnyOrder(gameInfoBean1, gameInfoBean2));
+    assertThat(instance.getGames(), containsInAnyOrder(game1, game2));
   }
 
   @Test
@@ -345,7 +345,7 @@ public class GameServiceImplTest extends AbstractPlainJavaFxTest {
     gameInfoMessageListenerCaptor.getValue().accept(gameInfoMessage);
 
     assertThat(instance.getCurrentGame(), notNullValue());
-    assertThat(instance.getCurrentGame().getUid(), is(1234));
+    assertThat(instance.getCurrentGame().getId(), is(1234));
   }
 
   @Test
@@ -376,14 +376,14 @@ public class GameServiceImplTest extends AbstractPlainJavaFxTest {
 
   @Test
   public void testOnGameInfoModify() throws InterruptedException {
-    assertThat(instance.getGameInfoBeans(), empty());
+    assertThat(instance.getGames(), empty());
 
     GameInfoMessage gameInfoMessage = GameInfoMessageBuilder.create(1).defaultValues().title("Game 1").state(PLAYING).get();
     gameInfoMessageListenerCaptor.getValue().accept(gameInfoMessage);
 
     CountDownLatch changeLatch = new CountDownLatch(1);
-    GameInfoBean gameInfoBean = instance.getGameInfoBeans().iterator().next();
-    gameInfoBean.titleProperty().addListener((observable, oldValue, newValue) -> {
+    Game game = instance.getGames().iterator().next();
+    game.titleProperty().addListener((observable, oldValue, newValue) -> {
       changeLatch.countDown();
     });
 
@@ -391,12 +391,12 @@ public class GameServiceImplTest extends AbstractPlainJavaFxTest {
     gameInfoMessageListenerCaptor.getValue().accept(gameInfoMessage);
 
     changeLatch.await();
-    assertEquals(gameInfoMessage.getTitle(), gameInfoBean.getTitle());
+    assertEquals(gameInfoMessage.getTitle(), game.getTitle());
   }
 
   @Test
   public void testOnGameInfoRemove() {
-    assertThat(instance.getGameInfoBeans(), empty());
+    assertThat(instance.getGames(), empty());
 
     GameInfoMessage gameInfoMessage = GameInfoMessageBuilder.create(1).defaultValues().title("Game 1").get();
     gameInfoMessageListenerCaptor.getValue().accept(gameInfoMessage);
@@ -404,7 +404,7 @@ public class GameServiceImplTest extends AbstractPlainJavaFxTest {
     gameInfoMessage = GameInfoMessageBuilder.create(1).title("Game 1").defaultValues().state(CLOSED).get();
     gameInfoMessageListenerCaptor.getValue().accept(gameInfoMessage);
 
-    assertThat(instance.getGameInfoBeans(), empty());
+    assertThat(instance.getGames(), empty());
   }
 
   @Test
@@ -479,7 +479,7 @@ public class GameServiceImplTest extends AbstractPlainJavaFxTest {
   @Test
   @SuppressWarnings("unchecked")
   public void testAddOnGameInfoBeanListener() throws Exception {
-    ListChangeListener<GameInfoBean> listener = mock(ListChangeListener.class);
+    ListChangeListener<Game> listener = mock(ListChangeListener.class);
     instance.addOnGameInfoBeansChangeListener(listener);
 
     GameInfoMessage gameInfoMessage = GameInfoMessageBuilder.create(1).defaultValues()
@@ -498,20 +498,20 @@ public class GameServiceImplTest extends AbstractPlainJavaFxTest {
 
     verify(listener).onChanged(gameInfoBeanChangeListenerCaptor.capture());
 
-    ListChangeListener.Change<? extends GameInfoBean> change = gameInfoBeanChangeListenerCaptor.getValue();
+    ListChangeListener.Change<? extends Game> change = gameInfoBeanChangeListenerCaptor.getValue();
     assertThat(change.next(), is(true));
-    List<? extends GameInfoBean> addedSubList = change.getAddedSubList();
+    List<? extends Game> addedSubList = change.getAddedSubList();
     assertThat(addedSubList, hasSize(1));
 
-    GameInfoBean gameInfoBean = addedSubList.get(0);
-    assertThat(gameInfoBean.getUid(), is(1));
-    assertThat(gameInfoBean.getHost(), is("host"));
-    assertThat(gameInfoBean.getTitle(), is("title"));
-    assertThat(gameInfoBean.getNumPlayers(), is(2));
-    assertThat(gameInfoBean.getMaxPlayers(), is(4));
-    assertThat(gameInfoBean.getFeaturedMod(), is("mod"));
-    assertThat(gameInfoBean.getVictoryCondition(), is(VictoryCondition.DOMINATION));
-    assertThat(gameInfoBean.getStatus(), is(PLAYING));
+    Game game = addedSubList.get(0);
+    assertThat(game.getId(), is(1));
+    assertThat(game.getHost(), is("host"));
+    assertThat(game.getTitle(), is("title"));
+    assertThat(game.getNumPlayers(), is(2));
+    assertThat(game.getMaxPlayers(), is(4));
+    assertThat(game.getFeaturedMod(), is("mod"));
+    assertThat(game.getVictoryCondition(), is(VictoryCondition.DOMINATION));
+    assertThat(game.getStatus(), is(PLAYING));
   }
 
   @Test
@@ -525,8 +525,8 @@ public class GameServiceImplTest extends AbstractPlainJavaFxTest {
 
   @Test
   public void testRehostIfGameIsNotRunning() throws Exception {
-    GameInfoBean gameInfoBean = GameInfoBeanBuilder.create().defaultValues().get();
-    instance.currentGame.set(gameInfoBean);
+    Game game = GameInfoBeanBuilder.create().defaultValues().get();
+    instance.currentGame.set(game);
 
     when(gameUpdateService.updateInBackground(any(), any(), any(), any())).thenReturn(completedFuture(null));
     when(fafService.requestHostGame(any())).thenReturn(completedFuture(GameLaunchMessageBuilder.create().defaultValues().get()));
@@ -540,8 +540,8 @@ public class GameServiceImplTest extends AbstractPlainJavaFxTest {
   public void testRehostIfGameIsRunning() throws Exception {
     instance.gameRunning.set(true);
 
-    GameInfoBean gameInfoBean = GameInfoBeanBuilder.create().defaultValues().get();
-    instance.currentGame.set(gameInfoBean);
+    Game game = GameInfoBeanBuilder.create().defaultValues().get();
+    instance.currentGame.set(game);
 
     when(gameUpdateService.updateInBackground(any(), any(), any(), any())).thenReturn(completedFuture(null));
     when(fafService.requestHostGame(any())).thenReturn(completedFuture(GameLaunchMessageBuilder.create().defaultValues().get()));

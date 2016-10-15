@@ -1,6 +1,5 @@
 package com.faforever.client.player;
 
-import com.faforever.client.chat.PlayerInfoBean;
 import com.faforever.client.game.GameService;
 import com.faforever.client.remote.FafService;
 import com.faforever.client.remote.domain.PlayersMessage;
@@ -70,32 +69,32 @@ public class PlayerServiceImplTest {
 
   @Test
   public void testGetPlayerForUsernameUsernameDoesNotExist() throws Exception {
-    PlayerInfoBean playerInfoBean = instance.getPlayerForUsername("junit");
-    assertNull(playerInfoBean);
+    Player player = instance.getPlayerForUsername("junit");
+    assertNull(player);
   }
 
   @Test
   public void testGetPlayerForUsernameUsernameExists() throws Exception {
     instance.createAndGetPlayerForUsername("junit");
 
-    PlayerInfoBean playerInfoBean = instance.getPlayerForUsername("junit");
+    Player player = instance.getPlayerForUsername("junit");
 
-    assertNotNull(playerInfoBean);
-    assertEquals("junit", playerInfoBean.getUsername());
+    assertNotNull(player);
+    assertEquals("junit", player.getUsername());
   }
 
   @Test
   public void testGetPlayerForUsernameNull() throws Exception {
-    PlayerInfoBean playerInfoBean = instance.getPlayerForUsername(null);
-    assertNull(playerInfoBean);
+    Player player = instance.getPlayerForUsername(null);
+    assertNull(player);
   }
 
   @Test
   public void testRegisterAndGetPlayerForUsernameDoesNotExist() throws Exception {
-    PlayerInfoBean playerInfoBean = instance.createAndGetPlayerForUsername("junit");
+    Player player = instance.createAndGetPlayerForUsername("junit");
 
-    assertNotNull(playerInfoBean);
-    assertEquals("junit", playerInfoBean.getUsername());
+    assertNotNull(player);
+    assertEquals("junit", player.getUsername());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -122,8 +121,8 @@ public class PlayerServiceImplTest {
 
   @Test
   public void testAddFriend() throws Exception {
-    PlayerInfoBean lisa = instance.createAndGetPlayerForUsername("lisa");
-    PlayerInfoBean ashley = instance.createAndGetPlayerForUsername("ashley");
+    Player lisa = instance.createAndGetPlayerForUsername("lisa");
+    Player ashley = instance.createAndGetPlayerForUsername("ashley");
 
     instance.addFriend(lisa);
     instance.addFriend(ashley);
@@ -137,18 +136,18 @@ public class PlayerServiceImplTest {
 
   @Test
   public void testAddFriendIsFoe() throws Exception {
-    PlayerInfoBean playerInfoBean = instance.createAndGetPlayerForUsername("player");
-    playerInfoBean.setSocialStatus(FOE);
+    Player player = instance.createAndGetPlayerForUsername("player");
+    player.setSocialStatus(FOE);
 
-    instance.addFriend(playerInfoBean);
+    instance.addFriend(player);
 
-    assertFalse("Property 'foe' is still true", playerInfoBean.getSocialStatus() == FOE);
+    assertFalse("Property 'foe' is still true", player.getSocialStatus() == FOE);
   }
 
   @Test
   public void testRemoveFriend() throws Exception {
-    PlayerInfoBean player1 = instance.createAndGetPlayerForUsername("player1");
-    PlayerInfoBean player2 = instance.createAndGetPlayerForUsername("player2");
+    Player player1 = instance.createAndGetPlayerForUsername("player1");
+    Player player2 = instance.createAndGetPlayerForUsername("player2");
 
     instance.addFriend(player1);
     verify(fafService).addFriend(player1);
@@ -166,8 +165,8 @@ public class PlayerServiceImplTest {
 
   @Test
   public void testAddFoe() throws Exception {
-    PlayerInfoBean player1 = instance.createAndGetPlayerForUsername("player1");
-    PlayerInfoBean player2 = instance.createAndGetPlayerForUsername("player2");
+    Player player1 = instance.createAndGetPlayerForUsername("player1");
+    Player player2 = instance.createAndGetPlayerForUsername("player2");
 
     instance.addFoe(player1);
     instance.addFoe(player2);
@@ -180,17 +179,17 @@ public class PlayerServiceImplTest {
 
   @Test
   public void testAddFoeIsFriend() throws Exception {
-    PlayerInfoBean playerInfoBean = instance.createAndGetPlayerForUsername("player");
-    playerInfoBean.setSocialStatus(FRIEND);
+    Player player = instance.createAndGetPlayerForUsername("player");
+    player.setSocialStatus(FRIEND);
 
-    instance.addFoe(playerInfoBean);
+    instance.addFoe(player);
 
-    assertFalse("Property 'friend' is still true", playerInfoBean.getSocialStatus() == FRIEND);
+    assertFalse("Property 'friend' is still true", player.getSocialStatus() == FRIEND);
   }
 
   @Test
   public void testRemoveFoe() throws Exception {
-    PlayerInfoBean player = instance.createAndGetPlayerForUsername("player");
+    Player player = instance.createAndGetPlayerForUsername("player");
 
     instance.addFriend(player);
     instance.removeFriend(player);
@@ -208,7 +207,7 @@ public class PlayerServiceImplTest {
     LoginSuccessEvent event = new LoginSuccessEvent("junit");
     instance.onLoginSuccess(event);
 
-    PlayerInfoBean currentPlayer = instance.getCurrentPlayer();
+    Player currentPlayer = instance.getCurrentPlayer();
 
     assertThat(currentPlayer.getUsername(), is("junit"));
   }

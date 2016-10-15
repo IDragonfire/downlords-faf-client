@@ -3,7 +3,7 @@ package com.faforever.client.main;
 import com.faforever.client.cast.CastsController;
 import com.faforever.client.chat.ChatController;
 import com.faforever.client.chat.ChatService;
-import com.faforever.client.chat.PlayerInfoBean;
+import com.faforever.client.player.Player;
 import com.faforever.client.connectivity.ConnectivityService;
 import com.faforever.client.coop.CoopController;
 import com.faforever.client.fx.JavaFxUtil;
@@ -595,7 +595,7 @@ public class MainController implements OnChooseGameDirectoryListener {
       return;
     }
 
-    PlayerInfoBean currentPlayer = playerService.getCurrentPlayer();
+    Player currentPlayer = playerService.getCurrentPlayer();
 
     int deviationFor80PercentQuality = (int) (ratingBeta / 2.5f);
     int deviationFor75PercentQuality = (int) (ratingBeta / 1.25f);
