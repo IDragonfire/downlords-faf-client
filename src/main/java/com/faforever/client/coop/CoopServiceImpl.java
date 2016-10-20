@@ -1,5 +1,6 @@
 package com.faforever.client.coop;
 
+import com.faforever.client.api.CoopLeaderboardEntry;
 import com.faforever.client.remote.FafService;
 
 import javax.annotation.Resource;
@@ -12,7 +13,12 @@ public class CoopServiceImpl implements CoopService {
   FafService fafService;
 
   @Override
-  public CompletableFuture<List<CoopMissionBean>> getCoopMaps() {
+  public CompletableFuture<List<CoopMission>> getMissions() {
     return fafService.getCoopMaps();
+  }
+
+  @Override
+  public CompletableFuture<List<CoopLeaderboardEntry>> getLeaderboard(CoopMission mission, int numberOfPlayers) {
+    return fafService.getCoopLeaderboard(mission, numberOfPlayers);
   }
 }

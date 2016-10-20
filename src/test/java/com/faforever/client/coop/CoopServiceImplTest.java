@@ -26,7 +26,7 @@ public class CoopServiceImplTest {
 
   @Test
   public void getCoopMaps() throws Exception {
-    instance.getCoopMaps();
+    instance.getMissions();
 
     verify(fafService).getCoopMaps();
   }

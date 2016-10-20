@@ -40,4 +40,9 @@ public class GameInfoBeanBuilder {
     game.setTitle(title);
     return this;
   }
+
+  public GameInfoBeanBuilder featuredMod(String featuredMod) {
+    game.setFeaturedMod(featuredMod);
+    return this;
+  }
 }

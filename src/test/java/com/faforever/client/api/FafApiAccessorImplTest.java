@@ -1,7 +1,7 @@
 package com.faforever.client.api;
 
 import com.faforever.client.coop.CoopCategory;
-import com.faforever.client.coop.CoopMissionBean;
+import com.faforever.client.coop.CoopMission;
 import com.faforever.client.leaderboard.Ranked1v1EntryBean;
 import com.faforever.client.mod.ModInfoBean;
 import com.faforever.client.mod.ModInfoBeanBuilder;
@@ -438,8 +438,8 @@ public class FafApiAccessorImplTest {
             "]}",
         "{'data': []}");
 
-    List<CoopMissionBean> coopMissions = instance.getCoopMissions();
-    CoopMissionBean result = coopMissions.get(0);
+    List<CoopMission> coopMissions = instance.getCoopMissions();
+    CoopMission result = coopMissions.get(0);
 
     assertThat(result.getName(), is("Sample Mission"));
     assertThat(result.getDescription(), is("Sample description"));

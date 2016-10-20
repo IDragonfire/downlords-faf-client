@@ -20,9 +20,9 @@ import com.faforever.client.chat.PrivateChatTabController;
 import com.faforever.client.chat.UrlPreviewResolver;
 import com.faforever.client.chat.UrlPreviewResolverImpl;
 import com.faforever.client.chat.UserInfoWindowController;
-import com.faforever.client.coop.CoopController;
 import com.faforever.client.chat.avatar.AvatarService;
 import com.faforever.client.chat.avatar.AvatarServiceImpl;
+import com.faforever.client.coop.CoopController;
 import com.faforever.client.fa.OnGameFullNotifier;
 import com.faforever.client.fx.DialogFactory;
 import com.faforever.client.fx.DialogFactoryImpl;
@@ -447,6 +447,6 @@ public class UiConfig {
 
   @Bean
   CoopController coopController() {
-    return loadController("coop.fxml");
+    return loadController("coop/coop.fxml");
   }
 }

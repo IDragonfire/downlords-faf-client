@@ -1,6 +1,6 @@
 package com.faforever.client.api;
 
-import com.faforever.client.coop.CoopMissionBean;
+import com.faforever.client.coop.CoopMission;
 import com.faforever.client.io.ByteCountListener;
 import com.faforever.client.leaderboard.Ranked1v1EntryBean;
 import com.faforever.client.map.MapBean;
@@ -119,7 +119,12 @@ public class MockFafApiAccessor implements FafApiAccessor {
   }
 
   @Override
-  public List<CoopMissionBean> getCoopMissions() {
+  public List<CoopMission> getCoopMissions() {
+    return Collections.emptyList();
+  }
+
+  @Override
+  public List<CoopLeaderboardEntry> getCoopLeaderboard(String missionId, int numberOfPlayers) {
     return Collections.emptyList();
   }
 

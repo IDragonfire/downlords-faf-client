@@ -21,4 +21,6 @@ public interface ReplayService {
   void startReplayServer(int gameUid);
 
   void stopReplayServer();
+
+  void runReplay(Integer replayId);
 }

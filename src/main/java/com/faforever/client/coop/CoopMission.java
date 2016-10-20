@@ -1,6 +1,5 @@
 package com.faforever.client.coop;
 
-import com.faforever.client.api.CoopMission;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -8,8 +7,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class CoopMissionBean {
+public class CoopMission {
 
+  private StringProperty id;
   private StringProperty name;
   private StringProperty description;
   private IntegerProperty version;
@@ -19,7 +19,8 @@ public class CoopMissionBean {
   private StringProperty thumbnailUrlLarge;
   private StringProperty mapFolderName;
 
-  public CoopMissionBean() {
+  public CoopMission() {
+    id = new SimpleStringProperty();
     name = new SimpleStringProperty();
     description = new SimpleStringProperty();
     version = new SimpleIntegerProperty();
@@ -30,8 +31,9 @@ public class CoopMissionBean {
     mapFolderName = new SimpleStringProperty();
   }
 
-  public static CoopMissionBean fromCoopInfo(CoopMission mission) {
-    CoopMissionBean bean = new CoopMissionBean();
+  public static CoopMission fromCoopInfo(com.faforever.client.api.CoopMission mission) {
+    CoopMission bean = new CoopMission();
+    bean.setId(mission.getId());
     bean.setDescription(mission.getDescription());
     bean.setName(mission.getName());
     bean.setVersion(mission.getVersion());
@@ -138,5 +140,17 @@ public class CoopMissionBean {
 
   public StringProperty mapFolderNameProperty() {
     return mapFolderName;
+  }
+
+  public String getId() {
+    return id.get();
+  }
+
+  public void setId(String id) {
+    this.id.set(id);
+  }
+
+  public StringProperty idProperty() {
+    return id;
   }
 }

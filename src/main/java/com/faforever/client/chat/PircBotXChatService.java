@@ -393,6 +393,7 @@ public class PircBotXChatService implements ChatService {
             logger.warn("Private message without user: {}", event);
             return;
           }
+          logger.debug("Received private message: {}", event);
           listener.accept(
               new ChatMessage(user.getNick(), Instant.ofEpochMilli(event.getTimestamp()), user.getNick(), event.getMessage())
           );

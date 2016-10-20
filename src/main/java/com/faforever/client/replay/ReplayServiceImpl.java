@@ -231,6 +231,11 @@ public class ReplayServiceImpl implements ReplayService {
     replayServer.stop();
   }
 
+  @Override
+  public void runReplay(Integer replayId) {
+    runOnlineReplay(replayId);
+  }
+
   private void runReplayFile(Path path) {
     try {
       String fileName = path.getFileName().toString();

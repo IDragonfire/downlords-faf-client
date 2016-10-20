@@ -1,7 +1,6 @@
 package com.faforever.client.util;
 
 import com.faforever.client.player.Player;
-import com.faforever.client.stats.RatingInfo;
 import com.faforever.client.domain.RatingHistoryDataPoint;
 
 import java.util.regex.Matcher;

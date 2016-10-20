@@ -1,7 +1,7 @@
 package com.faforever.client.api;
 
 import com.faforever.client.config.CacheNames;
-import com.faforever.client.coop.CoopMissionBean;
+import com.faforever.client.coop.CoopMission;
 import com.faforever.client.io.ByteCountListener;
 import com.faforever.client.io.CountingFileContent;
 import com.faforever.client.leaderboard.Ranked1v1EntryBean;
@@ -209,6 +209,7 @@ public class FafApiAccessorImpl implements FafApiAccessor {
   }
 
   @Override
+  @Cacheable(CacheNames.RATING_HISTORY)
   public History getRatingHistory(RatingType ratingType, int playerId) {
     return getSingle(String.format("/players/%d/ratings/%s/history", playerId, ratingType.getString()), History.class);
   }
@@ -270,9 +271,15 @@ public class FafApiAccessorImpl implements FafApiAccessor {
 
   @Override
   @Cacheable(CacheNames.COOP_MAPS)
-  public List<CoopMissionBean> getCoopMissions() {
+  public List<CoopMission> getCoopMissions() {
     logger.debug("Loading available coop missions");
-    return getMany("/coop/missions", CoopMission.class).stream().map(CoopMissionBean::fromCoopInfo).collect(toList());
+    return getMany("/coop/missions", com.faforever.client.api.CoopMission.class).stream().map(CoopMission::fromCoopInfo).collect(toList());
+  }
+
+  @Override
+  @Cacheable(CacheNames.COOP_LEADERBOARD)
+  public List<CoopLeaderboardEntry> getCoopLeaderboard(String missionId, int numberOfPlayers) {
+    return getMany(String.format("/coop/leaderboards/%s/%d?page[size]=100", missionId, numberOfPlayers), CoopLeaderboardEntry.class);
   }
 
   @NotNull

@@ -538,7 +538,7 @@ public class MainController implements OnChooseGameDirectoryListener {
     int toastScreenIndex = preferencesService.getPreferences().getNotification().getToastScreen();
     Screen screen;
     if (toastScreenIndex < screens.size()) {
-      screen = screens.get(toastScreenIndex);
+      screen = screens.get(Math.max(0, toastScreenIndex));
     } else {
       screen = Screen.getPrimary();
     }
@@ -897,6 +897,7 @@ public class MainController implements OnChooseGameDirectoryListener {
   @FXML
   void onPlayCoopSelected(ActionEvent event) {
     setContent(coopController.getRoot());
+    coopController.setUpIfNecessary();
     setActiveNavigationButtonFromChild((MenuItem) event.getTarget());
   }
 

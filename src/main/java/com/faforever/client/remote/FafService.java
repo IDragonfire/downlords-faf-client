@@ -1,10 +1,11 @@
 package com.faforever.client.remote;
 
+import com.faforever.client.api.CoopLeaderboardEntry;
 import com.faforever.client.api.Ranked1v1Stats;
 import com.faforever.client.api.RatingType;
-import com.faforever.client.player.Player;
 import com.faforever.client.chat.avatar.AvatarBean;
-import com.faforever.client.coop.CoopMissionBean;
+import com.faforever.client.config.CacheNames;
+import com.faforever.client.coop.CoopMission;
 import com.faforever.client.domain.RatingHistoryDataPoint;
 import com.faforever.client.game.Faction;
 import com.faforever.client.game.NewGameInfo;
@@ -12,6 +13,7 @@ import com.faforever.client.leaderboard.Ranked1v1EntryBean;
 import com.faforever.client.map.MapBean;
 import com.faforever.client.mod.ModInfoBean;
 import com.faforever.client.net.ConnectionState;
+import com.faforever.client.player.Player;
 import com.faforever.client.relay.GpgClientMessage;
 import com.faforever.client.remote.domain.GameLaunchMessage;
 import com.faforever.client.remote.domain.LoginMessage;
@@ -84,13 +86,15 @@ public interface FafService {
 
   CompletionStage<List<MapBean>> getNewestMaps(int count);
 
-  CompletableFuture<List<CoopMissionBean>> getCoopMaps();
+  CompletableFuture<List<CoopMission>> getCoopMaps();
 
   CompletionStage<List<AvatarBean>> getAvailableAvatars();
 
   void selectAvatar(AvatarBean avatar);
 
   void evictModsCache();
+
+  CompletableFuture<List<CoopLeaderboardEntry>> getCoopLeaderboard(CoopMission mission, int numberOfPlayers);
 
   @Cacheable(CacheNames.RATING_HISTORY)
   CompletableFuture<List<RatingHistoryDataPoint>> getRatingHistory(RatingType ratingType, int playerId);

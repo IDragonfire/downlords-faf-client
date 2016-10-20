@@ -19,6 +19,7 @@ public final class CacheNames {
   public static final String AVAILABLE_AVATARS = "availableAvatars";
   public static final String NEWS = "news";
   public static final String RATING_HISTORY = "ratingHistory";
+  public static final String COOP_LEADERBOARD = "coopLeaderboard";
 
   private CacheNames() {
     throw new AssertionError("Not instantiatable");
